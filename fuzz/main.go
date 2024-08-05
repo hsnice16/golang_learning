@@ -11,9 +11,9 @@ func main() {
 	rev, revError := Reverse(input)
 	doubleRev, doubleRevError := Reverse(rev)
 
-	fmt.Printf("original: %q\n",input)
-	fmt.Printf("reversed: %q, err: %v\n",rev, revError)
-	fmt.Printf("reversed again: %q, err: %v\n",doubleRev, doubleRevError)
+	fmt.Printf("original: %q\n", input)
+	fmt.Printf("reversed: %q, err: %v\n", rev, revError)
+	fmt.Printf("reversed again: %q, err: %v\n", doubleRev, doubleRevError)
 }
 
 func Reverse(s string) (string, error) {
@@ -22,7 +22,7 @@ func Reverse(s string) (string, error) {
 	}
 
 	r := []rune(s)
-	for i, j := 0, len(r)-1; i < len(r)/2; i,j = i+1, j-1 {
+	for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
 		r[i], r[j] = r[j], r[i]
 	}
 	return string(r), nil
