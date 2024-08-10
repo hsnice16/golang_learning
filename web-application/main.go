@@ -32,10 +32,74 @@ func login(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		// logic part of log in
 		fmt.Println("username:", r.Form["username"])
+
+		if len(r.Form["username"][0]) == 0 {
+			fmt.Println("Empty username")
+		}
+
 		fmt.Println("password:", r.Form["password"])
+		fmt.Println("fruit:", r.Form["fruit"])
+
+		slice := []string{"apple", "pear", "banana"}
+		isValid := false
+		for _, v := range slice {
+			if v == r.Form.Get("fruit") {
+				isValid = true
+				fmt.Println("Valid select value")
+			}
+		}
+		if !isValid {
+			fmt.Println("Invalid select value")
+		}
+
+		fmt.Println("gender:", r.Form["gender"])
+
+		slice = []string{"1", "2"}
+		isValid = false
+		for _, v := range slice {
+			if v == r.Form.Get("gender") {
+				isValid = true
+				fmt.Println("Valid gender value")
+			}
+		}
+		if !isValid {
+			fmt.Println("Invalid gender value")
+		}
+
+		fmt.Println("interest:", r.Form["interest"])
+
+		slice = []string{"football", "basketball", "tennis"}
+		a := Slice_diff(r.Form["interest"], slice)
+		fmt.Println("a:", a)
+
+		if a == nil {
+			fmt.Println("Valid interest value")
+		} else {
+			fmt.Println("Invalid interest value")
+		}
 	}
 
 	fmt.Printf("---------------- Request %v: DONE ----------------\n", r.Method)
+}
+
+func In_slice[T string](val T, slice []T) bool {
+	for _, v := range slice {
+		if v == val {
+			return true
+		}
+	}
+
+	return false
+}
+
+func Slice_diff[T string](slice1, slice2 []T) (diffslice []T) {
+	for _, v := range slice1 {
+		if !In_slice(v, slice2) {
+			diffslice = append(diffslice, v)
+		}
+	}
+
+	return
 }
 
 func sayHelloName(w http.ResponseWriter, r *http.Request) {
