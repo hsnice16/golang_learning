@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -15,6 +16,7 @@ import (
 func main() {
 	http.HandleFunc("/", sayHelloName) // set router
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/upload", upload)
 
 	err := http.ListenAndServe(":9090", nil) // set listen port
 	if err != nil {
@@ -24,6 +26,40 @@ func main() {
 	/// ------- Custom Router ------------
 	// mux := &custom_router.MyMux{}
 	// http.ListenAndServe(":9090", mux)
+}
+
+// upload logic
+func upload(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("---------------- Request %v: PROCESSING ----------------\n", r.Method) // get request method
+
+	if r.Method == "GET" {
+		crutime := time.Now().Unix()
+		h := md5.New()
+		io.WriteString(h, strconv.FormatInt(crutime, 10))
+		token := fmt.Sprintf("%x", h.Sum(nil))
+
+		t, _ := template.ParseFiles("upload.gtpl")
+		t.Execute(w, token)
+	} else {
+		r.ParseMultipartForm(32 << 20)
+		file, handler, err := r.FormFile("uploadfile")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+
+		fmt.Fprintf(w, "%v", handler.Header)
+		f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer f.Close()
+		io.Copy(f, file)
+	}
+
+	fmt.Printf("---------------- Request %v: DONE -------------------\n", r.Method)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
