@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strings"
@@ -9,16 +10,32 @@ import (
 
 func main() {
 	http.HandleFunc("/", sayHelloName) // set router
+	http.HandleFunc("/login", login)
 
 	err := http.ListenAndServe(":9090", nil) // set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 
-
 	/// ------- Custom Router ------------
 	// mux := &custom_router.MyMux{}
 	// http.ListenAndServe(":9090", mux)
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("---------------- Request %v: PROCESSING ----------------\n", r.Method) // get request method
+
+	if r.Method == "GET" {
+		t, _ := template.ParseFiles("login.gtpl")
+		t.Execute(w, nil)
+	} else {
+		r.ParseForm()
+		// logic part of log in
+		fmt.Println("username:", r.Form["username"])
+		fmt.Println("password:", r.Form["password"])
+	}
+
+	fmt.Printf("---------------- Request %v: DONE ----------------\n", r.Method)
 }
 
 func sayHelloName(w http.ResponseWriter, r *http.Request) {
