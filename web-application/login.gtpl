@@ -26,6 +26,7 @@
       <input type="checkbox" name="interest" value="tennis">Tennis
       <br>
       
+      <input type="hidden" name="token" value="{{.}}">
       <input type="submit" value="Login">
     </form>
   </body>

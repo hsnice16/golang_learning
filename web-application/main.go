@@ -1,11 +1,15 @@
 package main
 
 import (
+	"crypto/md5"
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -26,11 +30,24 @@ func login(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("---------------- Request %v: PROCESSING ----------------\n", r.Method) // get request method
 
 	if r.Method == "GET" {
+		crutime := time.Now().Unix()
+		h := md5.New()
+		io.WriteString(h, strconv.FormatInt(crutime, 10))
+		token := fmt.Sprintf("%x", h.Sum(nil))
+
 		t, _ := template.ParseFiles("login.gtpl")
-		t.Execute(w, nil)
+		t.Execute(w, token)
 	} else {
 		r.ParseForm()
 		// logic part of log in
+
+		token := r.Form.Get("token")
+		if token != "" {
+			// check token validity
+		} else {
+			// give error if no token
+		}
+
 		fmt.Println("username:", r.Form["username"])
 
 		if len(r.Form["username"][0]) == 0 {
