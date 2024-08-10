@@ -37,6 +37,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Empty username")
 		}
 
+		fmt.Println("Escaped username:", template.HTMLEscapeString(r.Form.Get("username")))
+		// fmt.Fprint(w, r.Form.Get("username"))
+		template.HTMLEscape(w, []byte(r.Form.Get("username")))
+
 		fmt.Println("password:", r.Form["password"])
 		fmt.Println("fruit:", r.Form["fruit"])
 
