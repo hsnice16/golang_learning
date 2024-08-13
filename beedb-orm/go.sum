@@ -1,0 +1,4 @@
+github.com/astaxie/beedb v0.0.0-20141221130223-1732292dfde4 h1:H6nlE+4uYvw3cLPG+6VyZC95cK7v4IOSJtSgFqRyAk8=
+github.com/astaxie/beedb v0.0.0-20141221130223-1732292dfde4/go.mod h1:2b16Ly607ElY8oA125L5xtogpOZ3MsWgAxunF3WDDbA=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
