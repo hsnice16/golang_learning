@@ -139,7 +139,7 @@ func count(w http.ResponseWriter, r *http.Request) {
 
 	ct := sess.Get("countnum")
 	if ct == nil {
-		sess.Set("countnum",1)
+		sess.Set("countnum", 1)
 	} else {
 		sess.Set("countnum", (ct.(int) + 1))
 	}
