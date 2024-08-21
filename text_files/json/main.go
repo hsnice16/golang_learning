@@ -44,4 +44,14 @@ func main() {
 			fmt.Println(k, "is of a type I don't know how to handle")
 		}
 	}
+
+	fmt.Println("--------------- Produce JSON -----------------")
+	var ps Serverslice
+	ps.Servers = append(ps.Servers, Server{ServerName: "Shanghai_VPN", ServerIP: "127.0.0.1"})
+	ps.Servers = append(ps.Servers, Server{ServerName: "Beijing_VPN", ServerIP: "127.0.0.2"})
+	b, err := json.Marshal(ps)
+	if err != nil {
+		fmt.Println("json err:", err)
+	}
+	fmt.Println(string(b))
 }
