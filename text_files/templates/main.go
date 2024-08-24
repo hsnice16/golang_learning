@@ -5,15 +5,30 @@ import (
 	"os"
 )
 
+type Friend struct {
+	Fname string
+}
+
 type Person struct {
 	UserName string
-	email    string // Field in not exported.
+	Emails   []string
+	Friends  []*Friend
 }
 
 func main() {
-	t := template.New("fieldname exmaple")
-	// {{.}} to output the object in formatted string
-	t, _ = t.Parse("{{.}}- hello {{.UserName}}! {{.email}}") // email not exported, so will have empty("") string
-	p := Person{UserName: "Himanshu", email: "h@gmai.com"}
+	f1 := Friend{Fname: "hsnice16"}
+	f2 := Friend{Fname: "xushiwei"}
+	t := template.New("fieldname example")
+	t, _ = t.Parse(`hello {{.UserName}}!
+	{{range .Emails}}
+		an email {{.}}
+	{{end}}
+	{{with .Friends}}
+	{{range .}}
+		my friend name is {{.Fname}}
+	{{end}}
+	{{end}}`)
+
+	p := Person{UserName: "Himanshu", Emails: []string{"hs@bee.me", "astax@example.com"}, Friends: []*Friend{&f1, &f2}}
 	t.Execute(os.Stdout, p)
 }
