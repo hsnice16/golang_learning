@@ -3,53 +3,17 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"os"
-	"strings"
 )
 
-type Friend struct {
-	Fname string
-}
-
-type Person struct {
-	UserName string
-	Emails   []string
-	Friends  []*Friend
-}
-
-func EmailDealWith(args ...interface{}) string {
-	ok := false
-	var s string
-	if len(args) == 1 {
-		s, ok = args[0].(string)
-	}
-	if !ok {
-		s = fmt.Sprint(args...)
-	}
-	// find the @symbol
-	substrs := strings.Split(s, "@")
-	if len(substrs) != 2 {
-		return s
-	}
-	// replace the @ by " at "
-	return (substrs[0] + " at " + substrs[1])
-}
-
 func main() {
-	f1 := Friend{Fname: "hsnice16"}
-	f2 := Friend{Fname: "xushiwei"}
-	t := template.New("fieldname example")
-	t = t.Funcs(template.FuncMap{"emailDeal": EmailDealWith})
-	t, _ = t.Parse(`hello {{.UserName}}!
-	{{range .Emails}}
-		an email {{.|emailDeal}}
-	{{end}}
-	{{with .Friends}}
-	{{range .}}
-		my friend name is {{.Fname}}
-	{{end}}
-	{{end}}`)
+	tOk := template.New("first")
+	template.Must(tOk.Parse(" some static text /* and a comment */"))
+	fmt.Println("The first one parsed Ok.")
 
-	p := Person{UserName: "Himanshu", Emails: []string{"hs@bee.me", "astax@example.com"}, Friends: []*Friend{&f1, &f2}}
-	t.Execute(os.Stdout, p)
+	template.Must(template.New("second").Parse("some static text {{ .Name }}"))
+	fmt.Println("The second one parsed OK.")
+
+	fmt.Println("The next one ought to fail.")
+	tErr := template.New("check parse error with Must")
+	template.Must(tErr.Parse(" some static text {{ .Name }"))
 }
