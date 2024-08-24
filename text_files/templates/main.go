@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"strings"
 )
 
 type Friend struct {
@@ -16,13 +17,32 @@ type Person struct {
 	Friends  []*Friend
 }
 
+func EmailDealWith(args ...interface{}) string {
+	ok := false
+	var s string
+	if len(args) == 1 {
+		s, ok = args[0].(string)
+	}
+	if !ok {
+		s = fmt.Sprint(args...)
+	}
+	// find the @symbol
+	substrs := strings.Split(s, "@")
+	if len(substrs) != 2 {
+		return s
+	}
+	// replace the @ by " at "
+	return (substrs[0] + " at " + substrs[1])
+}
+
 func main() {
 	f1 := Friend{Fname: "hsnice16"}
 	f2 := Friend{Fname: "xushiwei"}
 	t := template.New("fieldname example")
+	t = t.Funcs(template.FuncMap{"emailDeal": EmailDealWith})
 	t, _ = t.Parse(`hello {{.UserName}}!
 	{{range .Emails}}
-		an email {{. | html}}
+		an email {{.|emailDeal}}
 	{{end}}
 	{{with .Friends}}
 	{{range .}}
@@ -32,18 +52,4 @@ func main() {
 
 	p := Person{UserName: "Himanshu", Emails: []string{"hs@bee.me", "astax@example.com"}, Friends: []*Friend{&f1, &f2}}
 	t.Execute(os.Stdout, p)
-
-	fmt.Println("--------------- Conditions ------------------")
-
-	tEmpty := template.New("template test")
-	tEmpty = template.Must(tEmpty.Parse("Empty pipeline if demo: {{if ``}} will not be outputted. {{end}}\n"))
-	tEmpty.Execute(os.Stdout, nil)
-
-	tWithValue := template.New("template test")
-	tWithValue = template.Must(tWithValue.Parse("Not empty pipeline if demo: {{if `anything`}} will be outputted. {{end}}\n"))
-	tWithValue.Execute(os.Stdout, nil)
-
-	tIfElse := template.New("template test")
-	tIfElse = template.Must(tIfElse.Parse("if-else demo: {{if `anything`}} if part {{else}} else part.{{end}}\n"))
-	tIfElse.Execute(os.Stdout, nil)
 }
