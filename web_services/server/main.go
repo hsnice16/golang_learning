@@ -20,10 +20,15 @@ func main() {
 		if err != nil {
 			continue
 		}
-		daytime := time.Now().String()
-		conn.Write([]byte(daytime)) // don't care about return value
-		conn.Close()                // we're finished with this client
+		go handleClient(conn)
 	}
+}
+
+func handleClient(conn net.Conn) {
+	defer conn.Close()
+	daytime := time.Now().String()
+	conn.Write([]byte(daytime)) // don't care about return value
+	// we're finished with this client
 }
 
 func checkError(err error) {
