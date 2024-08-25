@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -41,4 +42,47 @@ func main() {
 	fmt.Println("\n----------------- Fields -----------------")
 
 	fmt.Printf(`strings.Fields("  foo bar baz  ") - %q`+"\n", strings.Fields("  foo bar baz  "))
+
+	fmt.Println("\n----------------- strconv - Append Series -----------------")
+
+	str := make([]byte, 0, 100)
+	str = strconv.AppendInt(str, 4567, 10)
+	str = strconv.AppendBool(str, false)
+	str = strconv.AppendQuote(str, "abcdefg")
+	str = strconv.AppendQuoteRune(str, '单')
+	fmt.Println("string(str) -", string(str))
+
+	fmt.Println("\n----------------- strconv - Format Series -----------------")
+
+	a := strconv.FormatBool(false)
+	b := strconv.FormatFloat(123.23, 'g', 12, 64)
+	c := strconv.FormatInt(1234, 10)
+	d := strconv.FormatUint(12345, 10)
+	e := strconv.Itoa(1023)
+	fmt.Println("a, b, c, d, e -", a, b, c, d, e)
+
+	fmt.Println("\n----------------- strconv - Parse Series -----------------")
+
+	boolA, err := strconv.ParseBool("false")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	floatB, err := strconv.ParseFloat("123.23", 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	intC, err := strconv.ParseInt("1234", 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	uIntD, err := strconv.ParseUint("12345", 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	intE := strconv.Itoa(1023)
+	fmt.Println("boolA, floatB, intC, uIntD, intE -", boolA, floatB, intC, uIntD, intE)
 }
